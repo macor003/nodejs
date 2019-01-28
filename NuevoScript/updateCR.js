@@ -3,22 +3,55 @@
 // ######################################################
 
 // Imports
+const fs = require('fs');
 const svnUltimate = require('node-svn-ultimate');
 const colors = require('colors');
 const connection = require('./db/connection');
 
 let APPDIR = "/opt/CR"
 let APPLIBS = "/opt/CRLibs"
+let DATETOUPDATEFILE = 'dateToUpdate'
 let VERSIONFILE;
+let ISDATETOUPDATE = false;
 
 function main() {
     console.log('####################################### '.green);
     console.log('####### Iniciando actualización ####### '.green);
     console.log('####################################### '.green);
 
-    verifyVersion();
-
+    verifyDateToUpdate();
 };
+
+function verifyDateToUpdate() {
+
+    let y = new Date().getFullYear();
+    let m = new Date().getMonth() + 1;
+    let d = new Date().getDate();
+
+    let mm = m < '10' ? '0' + m : m;
+    let dd = d < '10' ? '0' + d : d;
+
+    let fullDay = new Date([y, mm, dd].join('-'));
+
+    console.log(y + '-' + mm + '-' + dd);
+
+    fs.readFile('./OldScripts/' + DATETOUPDATEFILE, {
+        encoding: 'UTF-8'
+    }, (err, date) => {
+        if (err) throw err;
+        console.log(date);
+        let dateFile = new Date(date);
+
+        if (dateFile === fullDay) {
+            console.log('Hoy se debe actualizar');
+            verifyVersion();
+        } else {
+            console.log('No es día de actualizar');
+        }
+
+    });
+
+}
 
 function verifyVersion() {
     let esPiloto;
