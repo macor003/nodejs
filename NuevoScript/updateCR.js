@@ -35,7 +35,7 @@ function verifyDateToUpdate() {
         let dateFile = new Date(date);
 
         if (dateFile > today) {
-            console.log('No es día de actualizar');
+            console.log('!!!!!!!!! No es día de actualizar');
         } else if (dateFile < today) {
             console.log('No es día de actualizar');
         } else {
