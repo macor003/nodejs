@@ -14,39 +14,33 @@ let DATETOUPDATEFILE = 'dateToUpdate'
 let VERSIONFILE;
 let ISDATETOUPDATE = false;
 
-function main() {
-    console.log('####################################### '.green);
-    console.log('####### Iniciando actualización ####### '.green);
-    console.log('####################################### '.green);
-
-    verifyDateToUpdate();
-};
 
 function verifyDateToUpdate() {
 
     let y = new Date().getFullYear();
     let m = new Date().getMonth() + 1;
     let d = new Date().getDate();
-
     let mm = m < '10' ? '0' + m : m;
     let dd = d < '10' ? '0' + d : d;
 
-    let fullDay = new Date([y, mm, dd].join('-'));
+    let today = new Date([y, mm, dd].join('-'));
 
-    console.log(y + '-' + mm + '-' + dd);
+    console.log('Today is: ' + y + '-' + mm + '-' + dd);
 
     fs.readFile('./OldScripts/' + DATETOUPDATEFILE, {
         encoding: 'UTF-8'
     }, (err, date) => {
         if (err) throw err;
-        console.log(date);
+        console.log('DateToUpdate: ' + date);
         let dateFile = new Date(date);
 
-        if (dateFile === fullDay) {
+        if (dateFile > today) {
+            console.log('No es día de actualizar');
+        } else if (dateFile < today) {
+            console.log('No es día de actualizar');
+        } else {
             console.log('Hoy se debe actualizar');
             verifyVersion();
-        } else {
-            console.log('No es día de actualizar');
         }
 
     });
@@ -83,7 +77,6 @@ function checkUpdate() {
 }
 
 function checkConnectSVN() {
-
     svnUltimate.util.getRevision('../pruebaSVN/', {
         username: "eve0018536",
         password: "eve0018536"
@@ -106,5 +99,12 @@ function checkConnectSVN() {
 
 }
 
+function main() {
+    console.log('####################################### '.green);
+    console.log('####### Iniciando actualización ####### '.green);
+    console.log('####################################### '.green);
+
+    verifyDateToUpdate();
+};
 
 main();
